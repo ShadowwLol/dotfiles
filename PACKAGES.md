@@ -1,0 +1,36 @@
+# Packages
+**```
+Urxvt
+Putty
+Rofi
+Dmenu
+Spacefm
+Sublime text
+Discord
+Firefox
+Atom
+Audacity
+Etcher
+Blender
+Vim
+Wps
+Volumeicon
+Vifm
+Tint2
+Steam
+Stremio
+Spotify
+SimpleScreenRecorder
+Simplenote
+Pycharm
+IntelliJ
+QBittorrent
+Java
+Mpv
+Krita
+Youtube-viewer
+F.lux
+Qalc
+Lxappearance
+Flameshot
+LaTex```**
