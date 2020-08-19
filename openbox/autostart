@@ -1,0 +1,1 @@
+feh --bg-fill ~/Images/mywallpaper.png & setxkbmap -layout pt & tint2 -c ~/.config/tint2/minima/minima.tint2rc & cbatticon & nm-applet & copyq & volumeicon & flameshot & remaps
