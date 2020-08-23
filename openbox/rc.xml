@@ -180,6 +180,36 @@
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <!-- Keybindings for desktop switching -->
+    <keybind key="W-p">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/bashpass</command>
+      </action>
+    </keybind>
+    <keybind key="W-t">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/bashmark</command>
+      </action>
+    </keybind>
+    <keybind key="W-r">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/dmenurecord</command>
+      </action>
+    </keybind>
+    <keybind key="W-n">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/dmenuumount</command>
+      </action>
+    </keybind>
+    <keybind key="W-b">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/dmenumount</command>
+      </action>
+    </keybind>
+    <keybind key="W-m">
+      <action name="Execute">
+        <command>/home/shadoww/Scripts/displayselect</command>
+      </action>
+    </keybind>
     <keybind key="S-C-F1">
       <action name="SendToDesktop">
         <to>1</to>
@@ -603,7 +633,8 @@
     <!-- show the manage desktops section in the client-list-(combined-)menu -->
   </menu>
   <applications>
-    <decor>no</decor>
+    <application class="*">
+      <decor>no</decor>
     <!--
   # this is an example with comments through out. use these to make your
   # own rules, but without the comments of course.
@@ -698,5 +729,6 @@
 
   # end of the example
 -->
+    </application>
   </applications>
 </openbox_config>
