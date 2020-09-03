@@ -1,0 +1,7 @@
+#!/bin/sh
+
+url=${1:-$QUTE_URL}
+qualitychoice=$(printf "360p\n480p\n720p\n1080p" |  dmenu -i -l 4 -p "Watch in:")
+
+notify-send "Watching:" "$(youtube-dl --skip-download --get-title --no-warnings $url | sed 2d)"
+mpv --profile="$qualitychoice" "$url"

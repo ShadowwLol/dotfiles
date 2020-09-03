@@ -1,0 +1,61 @@
+#!/bin/sh
+
+url=${1:-$QUTE_URL}
+videolocation="$HOME/Videos/Downloads/"
+audiolocation="$HOME/Music/Downloads/"
+
+
+if [ ! -d "$videolocation" ]; then
+	mkdir -p "$videolocation"
+fi
+
+if [ ! -d "$audiolocation" ]; then
+	mkdir -p "$audiolocation"
+fi
+
+qualities=$(youtube-dl --list-formats "$url")
+
+if [ $? != 0 ]; then
+	printf 'message-error "Unsupported URL: %s"' "$url" >>"$QUTE_FIFO"
+	exit
+fi
+
+choice=$(printf "Video\nAudio" | sort | dmenu -i )
+function vid(){
+	quality=$({
+		printf 'best\nbestvideo\n'
+		printf '%s\n' "$qualities" | grep '^[[:digit:]]' | tac | sed '/audio/d'
+	} | dmenu -l 10 -p 'quality ')
+
+	if [ $? != 0 ]; then
+		notify-send "Error"
+		exit
+	fi
+
+	quality=$(printf '%s' "$quality" | awk '{ print $1 }') ; printf 'download %s\n' "$(youtube-dl -o "$videolocation%(title)s.%(ext)s" --restrict-filenames --format "$quality" $url)"
+}
+
+function audio(){
+	quality=$({
+		printf 'bestaudio\n'
+		printf '%s\n' "$qualities" | grep -i "audio"
+	} | dmenu -l 10 -p 'quality ')
+
+	if [ $? != 0 ]; then
+		notify-send "Error"
+		exit
+	fi
+
+	qualitymenu=$(printf '%s' "$quality" | awk '{ print $1 }')
+	qualityop=$(printf '%s' "$quality" | awk '{ print $2 }')
+	case $quality in
+	"bestaudio") printf 'download %s\n' "$(youtube-dl -o "$audiolocation%(title)s.%(ext)s" -x --audio-quality 0 --format "$qualitymenu" --restrict-filenames $url)" ;;
+	*) printf 'download %s\n' "$(youtube-dl -o "$audiolocation%(title)s.%(ext)s" -x --audio-quality 0 --audio-format "$qualityop" --restrict-filenames $url)" ;;
+	esac
+}
+
+case $choice in
+"Audio") audio ;;
+"Video") vid ;;
+*) exit ;;
+esac
