@@ -1,0 +1,658 @@
+#!/bin/bash
+
+# IMPLEMENT NODEL AND DEL IN # FULLSCREEN AND IN # PARTIAL
+
+wording=""
+choicepath=""
+options=""
+
+function nodel()
+{
+	scrot $options "$choicepath"
+	notify-send "Screenshot taken" "Saved in: $choicepath"
+}
+
+function del()
+{
+	notify-send "$wording" "Click to dismiss"
+	scrot $options "$choicepath"
+	notify-send "Screenshot taken" "Saved in: $choicepath"
+}
+
+function defpath()
+{
+	mkdir -p $HOME/Images/Screenshots/
+	printf "$HOME/Images/Screenshots/" >> $HOME/.sctaker
+}
+
+function fullscreen()
+{
+	fullchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$fullchoice" = "" ]
+	then
+		fullchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $fullchoice == *.png ]] || [[ $fullchoice == *.jpg ]] || [[ $fullchoice == *.jpeg ]]
+	then
+		printf ""
+	else
+		fullchoice="$fullchoice.png"
+	fi
+	choicepath="$shotpath$fullchoice"
+	delmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+	if [ "$delmenu" = "No delay" ]
+	then
+		options=""
+		nodel
+		scrot "$shotpath$fullchoice"
+	elif [ "$delmenu" = "Delay" ]
+	then
+		delfullchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		if [ "$delfullchoice" = "5s" ]
+		then
+			wording="5 seconds"
+			options="-d 5"
+			del
+		elif [ "$delfullchoice" = "10s" ]
+		then
+			wording="10 seconds"
+			options="-d 10"
+			del
+		elif [ "$delfullchoice" = "20s" ]
+		then
+			wording="20 seconds"
+			options="-d 20"
+			del
+		elif [ "$delfullchoice" = "45s" ]
+		then
+			wording="45 seconds"
+			options="-d 45"
+			del
+		elif [ "$delfullchoice" = "1m" ]
+		then
+			wording="1 minute"
+			options="-d 60"
+			del
+		elif [ "$delfullchoice" = "1.5m" ]
+		then
+			wording="1.5 minutes"
+			options="-d 90"
+			del
+		elif [ "$delfullchoice" = "2m" ]
+		then
+			wording="2 minutes"
+			options="-d 120"
+			del
+		elif [ "$delfullchoice" = "3m" ]
+		then
+			wording="3 minutes"
+			options="-d 180"
+			del
+		elif [ "$delfullchoice" = "5m" ]
+		then
+			wording="5 minutes"
+			options="-d 300"
+			del
+		elif [ "$delfullchoice" = "7m" ]
+		then
+			wording="7 minutes"
+			options="-d 420"
+			del
+		elif [ "$delfullchoice" = "10m" ]
+		then
+			wording="10 minutes"
+			options="-d 600"
+			del
+		fi
+	fi
+}
+
+function partial()
+{
+	partialchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$partialchoice" = "" ]
+	then
+		partialchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $partialchoice == *.png ]] || [[ $partialchoice == *.jpg ]] || [[ $partialchoice == *.jpeg ]]
+	then
+		printf ""
+	else
+		partialchoice="$partialchoice.png"
+	fi
+	choicepath="$shotpath$partialchoice"
+	delpartmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+	if [ "$delpartmenu" = "No delay" ]
+	then
+		options="-bs"
+		nodel
+	elif [ "$delpartmenu" = "Delay" ]
+	then
+		delpartchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		if [ "$delpartchoice" = "5s" ]
+		then
+			wording="5 seconds"
+			options="-d 5 -bs"
+			del
+		elif [ "$delpartchoice" = "10s" ]
+		then
+			wording="10 seconds"
+			options="-d 10 -bs"
+			del
+		elif [ "$delpartchoice" = "20s" ]
+		then
+			wording="20 seconds"
+			options="-d 20 -bs"
+			del
+		elif [ "$delpartchoice" = "45s" ]
+		then
+			wording="45 seconds"
+			options="-d 45 -bs"
+			del
+		elif [ "$delpartchoice" = "1m" ]
+		then
+			wording="1 minute"
+			options="-d 60 -bs"
+			del
+		elif [ "$delpartchoice" = "1.5m" ]
+		then
+			wording="1.5 minutes"
+			options="-d 90 -bs"
+			del
+		elif [ "$delpartchoice" = "2m" ]
+		then
+			wording="2 minutes"
+			options="-d 120 -bs"
+			del
+		elif [ "$delpartchoice" = "3m" ]
+		then
+			wording="3 minutes"
+			options="-d 180 -bs"
+			del
+		elif [ "$delpartchoice" = "5m" ]
+		then
+			wording="5 minutes"
+			options="-d 300 -bs"
+			del
+		elif [ "$delpartchoice" = "7m" ]
+		then
+			wording="7 minutes"
+			options="-d 420 -bs"
+			del
+		elif [ "$delpartchoice" = "10m" ]
+		then
+			wording="10 minutes"
+			options="-d 600 -bs"
+			del
+		fi
+	fi
+}
+
+function window()
+{
+	winchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$winchoice" = "" ]
+	then
+		winchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $winchoice != *.png ]] || [[ $winchoice != *.jpg ]] || [[ $winchoice != *.jpeg ]]
+	then
+		winchoice="$winchoice.png"
+	fi
+
+	choicepath="$shotpath$winchoice"
+	acwinmenu=$(printf "Active window\nSelect window" | dmenu -i -p "Screentake")
+	if [ "$acwinmenu" = "Active window" ]
+	then
+		bordwinmenu=$(printf "Border\nNo border" | dmenu -i -p "Screentake")
+		if [ "$bordwinmenu" = "Border" ]
+		then
+
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			case $delwinmenu in
+			"No delay")
+			options="-ub"
+			nodel
+			;;
+			"Delay")
+			delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+			case $delwinchoice in
+			"5s")
+			wording="5 seconds"
+			options="-d 5 -ub"
+			del
+			;;
+			"10s")
+			wording="10 seconds"
+			options="-d 10 -ub"
+			del
+			;;
+			"20s")
+			wording="20 seconds"
+			options="-d 20 -ub"
+			del
+			;;
+			"45s")
+			wording="45 seconds"
+			options="-d 45 -ub"
+			del
+			;;
+			"1m")
+			wording="1 minute"
+			options="-d 60 -ub"
+			del
+			;;
+			"1.5m")
+			wording="1.5 minutes"
+			options="-d 90 -ub"
+			del
+			;;
+			"2m")
+			wording="2 minutes"
+			options="-d 120 -ub"
+			del
+			;;
+			"3m")
+			wording="3 minutes"
+			options="-d 180 -ub"
+			del
+			;;
+			"5m")
+			wording="5 minutes"
+			options="-d 300 -ub"
+			del
+			;;
+			"7m")
+			wording="7 minutes"
+			options="-d 420 -ub"
+			del
+			;;
+			"10m")
+			wording="10 minutes"
+			options="-d 600 -ub"
+			del
+			;;
+			*)
+			exit
+			;;
+			esac
+			;;
+			*)
+			exit
+			;;
+			esac
+			case $delwinmenu in
+			"No delay")
+			options="-ub"
+			nodel
+			;;
+			"Delay")
+			delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+			case $delwinchoice in
+			"5s")
+			wording="5 seconds"
+			options="-d 5 -ub"
+			del
+			;;
+			"10s")
+			wording="10 seconds"
+			options="-d 10 -ub"
+			del
+			;;
+			"20s")
+			wording="20 seconds"
+			options="-d 20 -ub"
+			del
+			;;
+			"45s")
+			wording="45 seconds"
+			options="-d 45 -ub"
+			del
+			;;
+			"1m")
+			wording="1 minute"
+			options="-d 60 -ub"
+			del
+			;;
+			"1.5m")
+			wording="1.5 minutes"
+			options="-d 90 -ub"
+			del
+			;;
+			"2m")
+			wording="2 minutes"
+			options="-d 120 -ub"
+			del
+			;;
+			"3m")
+			wording="3 minutes"
+			options="-d 180 -ub"
+			del
+			;;
+			"5m")
+			wording="5 minutes"
+			options="-d 300 -ub"
+			del
+			;;
+			"7m")
+			wording="7 minutes"
+			options="-d 420 -ub"
+			del
+			;;
+			"10m")
+			wording="10 minutes"
+			options="-d 600 -ub"
+			del
+			;;
+			*)
+			exit
+			;;
+			esac
+			;;
+			*)
+			exit
+			;;
+			esac
+		elif [ "$bordwinmenu" = "No border" ]
+		then
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			case $delwinmenu in
+			"No delay")
+			options="-u"
+			nodel
+			;;
+			"Delay")
+			delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+			case $delwinchoice in
+			"5s")
+			wording="5 seconds"
+			options="-d 5 -u"
+			del
+			;;
+			"10s")
+			wording="10 seconds"
+			options="-d 10 -u"
+			del
+			;;
+			"20s")
+			wording="20 seconds"
+			options="-d 20 -u"
+			del
+			;;
+			"45s")
+			wording="45 seconds"
+			options="-d 45 -u"
+			del
+			;;
+			"1m")
+			wording="1 minute"
+			options="-d 60 -u"
+			del
+			;;
+			"1.5m")
+			wording="1.5 minutes"
+			options="-d 90 -u"
+			del
+			;;
+			"2m")
+			wording="2 minutes"
+			options="-d 120 -u"
+			del
+			;;
+			"3m")
+			wording="3 minutes"
+			options="-d 180 -u"
+			del
+			;;
+			"5m")
+			wording="5 minutes"
+			options="-d 300 -u"
+			del
+			;;
+			"7m")
+			wording="7 minutes"
+			options="-d 420 -u"
+			del
+			;;
+			"10m")
+			wording="10 minutes"
+			options="-d 600 -u"
+			del
+			;;
+			*)
+			exit
+			;;
+			esac
+			;;
+			*)
+			exit
+			;;
+			esac
+		fi
+
+	elif [ "$acwinmenu" = "Select window" ]
+	then
+		bordwinmenu=$(printf "Border\nNo border" | dmenu -i -p "Screentake")
+		case $bordwinmenu in
+		"Border")
+		delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+		case $delwinmenu in
+		"No delay")
+		options="-sb"
+		nodel
+		;;
+		"Delay")
+		delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		case $delwinchoice in
+		"5s")
+		wording="5 seconds"
+		options="-d 5 -sb"
+		del
+		;;
+		"10s")
+		wording="10 seconds"
+		options="-d 10 -sb"
+		del
+		;;
+		"20s")
+		wording="20 seconds"
+		options="-d 20 -sb"
+		del
+		;;
+		"45s")
+		wording="45 seconds"
+		options="-d 45 -sb"
+		del
+		;;
+		"1m")
+		wording="1 minute"
+		options="-d 60 -sb"
+		del
+		;;
+		"1.5m")
+		wording="1.5 minutes"
+		options="-d 90 -sb"
+		del
+		;;
+		"2m")
+		wording="2 minutes"
+		options="-d 120 -sb"
+		del
+		;;
+		"3m")
+		wording="3 minutes"
+		options="-d 180 -sb"
+		del
+		;;
+		"5m")
+		wording="5 minutes"
+		options="-d 300 -sb"
+		del
+		;;
+		"7m")
+		wording="7 minutes"
+		options="-d 420 -sb"
+		del
+		;;
+		"10m")
+		wording="10 minutes"
+		options="-d 600 -sb"
+		del
+		;;
+		*)
+		exit
+		;;
+		esac
+		;;
+		*)
+		exit
+		;;
+		esac
+		;;
+		"No border")
+		delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+		case $delwinmenu in
+		"No delay")
+		options="-s"
+		nodel
+		;;
+		"Delay")
+		delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		case $delwinchoice in
+		"5s")
+		wording="5 seconds"
+		options="-d 5 -s"
+		del
+		;;
+		"10s")
+		wording="10 seconds"
+		options="-d 10 -s"
+		del
+		;;
+		"20s")
+		wording="20 seconds"
+		options="-d 20 -s"
+		del
+		;;
+		"45s")
+		wording="45 seconds"
+		options="-d 45 -s"
+		del
+		;;
+		"1m")
+		wording="1 minute"
+		options="-d 60 -s"
+		del
+		;;
+		"1.5m")
+		wording="1.5 minutes"
+		options="-d 90 -s"
+		del
+		;;
+		"2m")
+		wording="2 minutes"
+		options="-d 120 -s"
+		del
+		;;
+		"3m")
+		wording="3 minutes"
+		options="-d 180 -s"
+		del
+		;;
+		"5m")
+		wording="5 minutes"
+		options="-d 300 -s"
+		del
+		;;
+		"7m")
+		wording="7 minutes"
+		options="-d 420 -s"
+		del
+		;;
+		"10m")
+		wording="10 minutes"
+		options="-d 600 -s"
+		del
+		;;
+		*)
+		exit
+		;;
+		esac
+		;;
+		*)
+		exit
+		;;
+		esac
+		;;
+		*)
+		exit
+		;;
+		esac
+	fi
+}
+
+shotpath="$(cat $HOME/.sctaker)"
+
+if [ -f "$HOME/.sctaker" ]
+then
+	if [ "$(cat $HOME/.sctaker)" != "" ]
+	then
+		if [ ! -d "$(cat $HOME/.sctaker)" ]
+		then
+			rm $HOME/.sctaker
+			touch $HOME/.sctaker
+			defpath
+		fi
+	else
+		screenpath=$(printf "" | dmenu -p "Screenshot Path:")
+		if [ -d "$screenpath" ]
+		then
+			printf "$screenpath" >> $HOME/.sctaker
+		else
+			pathmen=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
+			if [ $pathmen = "Create it" ]
+			then
+				mkdir -p "$screenpath"
+				printf "$screenpath" >> $HOME/.sctaker
+			else
+				defpath
+			fi
+		fi
+			
+	fi
+	printf ""
+else 
+	touch $HOME/.sctaker
+	scpath=$(printf "" | dmenu -p "Screenshot Path:")
+	if [ -d "$scpath" ]
+	then
+		printf "$scpath" >> $HOME/.sctaker
+	else
+		pathmenu=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
+		if [ $pathmenu = "Create it" ]
+		then
+			mkdir -p "$scpath"
+			printf "$scpath" >> $HOME/.sctaker
+		else
+			mkdir -p $HOME/Images/Screenshots/
+			printf "$HOME/Images/Screenshots/" >> $HOME/.sctaker
+		fi
+	fi
+fi
+
+menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
+
+case $menu in
+"Partial")
+partial
+;;
+"Window")
+window
+;;
+"Fullscreen")
+fullscreen
+;;
+*)
+exit
+;;
+esac

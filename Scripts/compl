@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Parameters:
+#   $0   $1      $2       $3         $4
+# compl type inputfile outputfile options
+
+case $1 in
+"-help")
+reset
+printf "Structure:\n\ncompl   type   file1   file2   options\n\ncompl: calling the program\ntype: Programming language\nfile1: Input file\nfile2: Output file\noptions: Optional\n"
+read -s pause ; clear
+printf "Information:\n\nSupported types: Assemblyx86, Assemblyx64, C, C++\nOptions: -k ( keeps all the files )\n"
+read -s pause ; reset
+;;
+"asm32")
+# Compile assembly with elf32
+nasm -f elf32 -o "$3.o" "$2" ; ld -m elf_i386 "$3.o" -o "$3" 
+case $4 in
+"-k")
+;;
+*) rm "$3.o"
+;;
+esac
+;;
+"asm64")
+# Compile assembly with elf64
+nasm -f elf64 -o "$3.o" "$2" ; ld "$3.o" -o "$3"
+case $4 in
+"-k")
+;;
+*) rm "$3.o"
+;;
+esac
+;;
+"cpp")
+# Compile C++
+g++ "$2" -o "$3"
+;;
+"c")
+# Compile C
+gcc "$2" -o "$3"
+;;
+*) printf "I don't understand, please check out compl -help\n" ; exit 1
+;;
+esac

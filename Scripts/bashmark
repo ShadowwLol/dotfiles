@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# parameters - name link
+
+function add()
+{
+	linkname=$(printf "" | dmenu -p "Name:")
+	case $linkname in
+	"")
+	exit
+	;;
+	esac
+
+	if grep -wq "$linkname" "$HOME/.bashmark"
+	then
+		notify-send "Error: Name used" "Click to dismiss."
+		exit
+	fi
+
+	link=$(printf "" | dmenu -p "Link:")
+	case $link in
+	"")
+	exit
+	;;
+	esac
+
+	if grep -wq "$link" "$HOME/.bashmark" 
+	then
+		notify-send "Error: Link used" "Click to dismiss."
+		exit
+	fi
+
+	printf '%s %s\n' "$linkname" "$link" >> "$HOME/.bashmark"
+}
+
+function get()
+{
+	trg=$(cat "$HOME/.bashmark" | awk '{print $1}' | sort | dmenu -i -p "Bashmark")
+	if [ $trg != "" ]; then
+		grep -w "$trg" "$HOME/.bashmark" | awk '{print $2}' | xclip -selection clipboard
+		notify-send "💻 $trg copied to the clipboard." "Click to dismiss."
+	fi
+}
+
+if [ ! -f "$HOME/.bashmark" ]
+then
+	touch "$HOME/.bashmark"
+fi
+
+menu=$(printf "Add\nGet" | dmenu -i -p "Bashmark")
+
+case $menu in
+"Add")
+add
+;;
+"Get")
+get
+;;
+*)
+exit
+;;
+esac

@@ -1,0 +1,145 @@
+#!/bin/bash
+
+# parameters - service username password
+# GPG encryption
+
+# ENCRYPT: 
+#gpg -e -r "$catkey" "$db"
+# remove the other file
+
+# DECRYPT:
+# gpg -d $db | tail -n +3 file.txt | awk '{print $1}' | sort | dmenu -i -p "Bashpass"
+
+# IF THE GPG KEY WAS MISWRITTEN DELETE THE .bashpass/key FILE AND RERUN THE SCRIPT
+# --trust-model always
+
+function add()
+{
+	if [ ! -f "$HOME/.bashpass/db.gpg" ]
+	then
+		gpg -e --trust-model always -r "$catkey" "$db"
+		rm "$HOME/.bashpass/db"
+	fi
+	service=$(printf "" | dmenu -p "Service:")
+	case $service in
+	"")
+	notify-send "Error: invalid service" "Click to dismiss."
+	exit
+	;;
+	esac
+
+	if grep -wq "$service" "$HOME/.bashpass/db"
+	then
+		notify-send "Error: Service name used" "Click to dismiss."
+		exit
+	fi
+
+	username=$(printf "" | dmenu -p "Username:")
+	case $username in
+	"")
+	notify-send "Error: invalid username" "Click to dismiss."
+	exit
+	;;
+	esac
+
+	pass=$(printf "" | dmenu -p "Password:")
+	case $pass in
+	"")
+	notify-send "Error: invalid password" "Click to dismiss."
+	exit
+	;;
+	esac
+
+	# DECRYPT
+	gpg -o "$HOME/.bashpass/db" -d "$HOME/.bashpass/db.gpg"
+	rm "$HOME/.bashpass/db.gpg"
+
+	printf '%s %s %s\n' "$service" "$username" "$pass" >> "$db"
+
+	# ENCRYPT
+	gpg -e --trust-model always -r "$catkey" "$db"
+	rm "$HOME/.bashpass/db"
+}
+
+function get()
+{
+	# DECRYPT
+	gpg -o "$HOME/.bashpass/db" -d "$HOME/.bashpass/db.gpg"
+	rm "$HOME/.bashpass/db.gpg"
+	servtrg=$(cat "$HOME/.bashpass/db" | awk '{print $1}' | sort | dmenu -i -p "Bashpass")
+	if [ $servtrg != "" ]; then
+		uspassmenu=$(printf "Username\nPassword" | dmenu -i -p "Bashpass")
+		case $uspassmenu in
+		"Username")
+		grep -w "$servtrg" "$HOME/.bashpass/db" | awk '{print $2}' | xclip -selection clipboard
+		notify-send "💻 $servtrg's username copied to the clipboard." "Click to dismiss."
+		# ENCRYPT
+		gpg -e --trust-model always -r "$catkey" "$db"
+		rm "$HOME/.bashpass/db"
+		;;
+		"Password")
+		grep -w "$servtrg" "$HOME/.bashpass/db" | awk '{print $3}' | xclip -selection clipboard
+		notify-send "💻 $servtrg's password copied to the clipboard." "Click to dismiss."
+		# ENCRYPT
+		gpg -e --trust-model always -r "$catkey" "$db"
+		rm "$HOME/.bashpass/db"
+		;;
+		*)
+		# ENCRYPT
+		gpg -e --trust-model always -r "$catkey" "$db"
+		rm "$HOME/.bashpass/db"
+		exit
+		;;
+		esac
+	fi
+}
+
+
+if [[ ! -d "$HOME/.bashpass"  ]]; then
+	mkdir "$HOME/.bashpass"
+	touch "$HOME/.bashpass/db"
+fi
+
+db="$HOME/.bashpass/db"
+dbenc="$HOME/.bashpass/db.gpg"
+key="$HOME/.bashpass/key"
+
+if [[ ! -f "$key" ]] || [ ! -s "$key" ]
+then
+	touch "$key"
+	gpgmenu=$(printf "" | dmenu -p "GPG key:")
+
+	case $gpgmenu in
+	"")
+	notify-send "Error: invalid GPG key" "Click to dismiss."
+	rm -rf "$HOME/.bashpass/"
+	exit
+	;;
+	esac
+
+	printf "$gpgmenu" > "$key"
+
+fi
+
+catkey=`cat $key`
+
+if [[ -f "$db" && ! -f "$dbend" ]]
+then
+	# ENCRYPT
+	gpg -e --trust-model always -r "$catkey" "$db"
+	rm "$HOME/.bashpass/db"
+fi
+
+menu=$(printf "Add\nGet" | dmenu -i -p "Bashpass")
+
+case $menu in
+"Add")
+add
+;;
+"Get")
+get
+;;
+*)
+exit
+;;
+esac

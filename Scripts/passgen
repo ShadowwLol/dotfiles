@@ -1,0 +1,9 @@
+#!/bin/bash
+
+printf "P A S S    G E N\n\n"
+printf "Password length\n\n> " ; read PASS_LENGHT ; clear
+printf "How many passwords\n\n> " ; read PASS_NUM ; clear
+printf "P A S S    G E N\n\n"
+for p in $(seq 1 $PASS_NUM 2> /dev/null); do
+	openssl rand -base64 48 | cut -c1-$PASS_LENGHT
+done

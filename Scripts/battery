@@ -1,0 +1,28 @@
+#!/bin/bash
+LOGFILE="$HOME/.batstats"
+for battery in /sys/class/power_supply/BAT?
+do
+	CATLOG="$(cat $LOGFILE | awk '{print $1}')"
+	CATSTATS="$(cat $LOGFILE | awk '{print $2}')"
+	capacity=$(cat "$battery/capacity") || exit
+	status=$(cat "$battery/status")
+	fullemoji="🔋"
+	chargemoji="⚡"
+	dischargemoji="🔌"
+	unchargemoji="🛑"
+	unknownemoji="❓"
+	warnemoji="❗️"
+	if [[ "$CATLOG" != "100" && "$capacity" = "100" ]]; then
+		notify-send "$fullemoji Battery is full [100%]" "Click to dismiss"
+	elif [[ "$CATLOG" > "30" && "$capacity" < "30" ]]; then
+		notify-send "$warnemoji Warning, battery is weak [30%]" "Click to dismiss"
+	elif [[ "$CATSTATS" != "Charging" && "$status" == "Charging" ]]; then
+		notify-send "$chargemoji Battery is charging [$capacity%]" "Click to dismiss"
+	elif [[ "$CATSTATS" != "Discharging" && "$status" == "Discharging" ]]; then
+		notify-send "$dischargemoji Battery is discharging [$capacity%]" "Click to dismiss"
+	fi
+	[ "$status" = "Discharging" ] && [ "$capacity" -le 25 ] && warn=$warnemoji
+	printf "%s%s%s\n" "$(printf "$status" | sed "s/,//;s/Discharging/$dischargemoji/;s/Not charging/$unchargemoji/;s/Charging/$chargemoji/;s/Unknown/$unknownemoji/;s/Full/$fullemoji/;s/ 0*/ /g;s/ :/ /g")" "$warn" "$(printf "$capacity" | sed -e 's/$/%/')"
+	unset warn
+	printf "%s %s\n" "$capacity" "$status" > $LOGFILE 
+done
