@@ -18,3 +18,23 @@ xnoremap J :move '>+1<CR>gv-gv
 let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
 let &t_EI = "\<Esc>[2 q"
+set wildmode=longest,list,full
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+map <leader>o :setlocal spell! spelllang=en_us,pt_pt<CR>
+set splitbelow splitright
+
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+autocmd BufWritePre * %s/\s\+$//e
+autocmd BufWritepre * %s/\n\+\%$//e
+
+:hi TabLineFill ctermfg=Black ctermbg=White
+:hi TabLine ctermfg=White ctermbg=Black
+:hi TabLineSel ctermfg=Yellow ctermbg=Black
+set listchars=tab:→\ ,eol:↲
+set tabstop=4
+set shiftwidth=4
