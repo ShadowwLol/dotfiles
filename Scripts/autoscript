@@ -4,9 +4,9 @@ SCRIPT_FOLDER="$HOME/Scripts"
 SCRIPT_FILE="$SCRIPT_FOLDER/$1"
 
 if [[ -f $SCRIPT_FILE ]]; then
-  subl $SCRIPT_FILE
+  vim $SCRIPT_FILE
 else
   echo '#!/bin/bash' > $SCRIPT_FILE
   chmod +x $SCRIPT_FILE
-  subl $SCRIPT_FILE
+  vim $SCRIPT_FILE
 fi

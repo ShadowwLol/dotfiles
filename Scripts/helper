@@ -1,0 +1,146 @@
+#!/bin/bash
+PS3='> '
+percentagemenu=( "Discount" "Increase" "Simple Percentage" "Percentage of X from Y" "Increase / Decrease" );
+menus=( "Exit" "Percentage" "Average" "Proportion" "Ratio" "Equations" "Fractions" "GCF / LCM" "Combinations" "Prime Checker" "Number Generator" "Shapes" "Bodies" "Acceleration" "Angle" "Area" "Cooking" "Data Storage" "Data Transfer" "Energy" "Force" "Fuel" "Lenght" "Numeric Base" "Power" "Pressure" "Ring Size" "Roman Numerals" "Shoe Size" "Speed" "Temperature" "Time" "Torque" "Volume" "Volumetric Flow" "Weight" "Currency Converter" "Unit Price" "Sales Tax" "Tip" "Loan" "Interest" "Body Mass Index" "Daily Caloric Burn" "Body Fat Percentage" "Age" "Date" "Time" "Mileage" "Ohm's Law" );
+appname="Helper"
+
+help() {
+	case $1 in
+	"y")
+	clear
+	printf "H E L P E R\n"
+	printf "Helper -> $option\n" ;;
+	"n")
+	clear
+	printf "H E L P E R\n"
+	printf "Helper -> $option -> $2\n" ;;
+	esac
+}
+
+discountmenu() {
+	printf "Initial value: "
+	read -r initialvalue
+	help n $perchoice
+	printf "Discount: "
+	read -r discount #| sed "s/%//g"
+	help n $perchoice
+	printf '\n%s' "Initial value ($): "
+	printf '%0.2f\n' "$initialvalue"
+	printf '%s' "Discount (%): "
+	printf '%0.1f\n' "$discount"
+	saving=$(bc <<< "scale=2; ($discount/100)*$initialvalue")
+	finalvalue=$(bc <<< "scale=2; $initialvalue-$saving")
+	printf '%s' "Final value ($): "
+	printf '%0.2f\n' "$finalvalue"
+	printf '%s' "Saving ($): "
+	printf '%0.2f\n' "$saving"
+	read -s pause
+	start
+}
+
+increasemenu() {
+	printf "Initial value: "
+	read -r initialvalue
+	help n $perchoice
+	printf "Increase: "
+	read -r increase #| sed "s/%//g"
+	help n $perchoice
+	printf '\n%s' "Initial value ($): "
+	printf '%0.2f\n' "$initialvalue"
+	printf '%s' "Increase (%): "
+	printf '%0.1f\n' "$increase"
+	raise=$(bc <<< "scale=2; ($increase/100)*$initialvalue")
+	finalvalue=$(bc <<< "scale=2; $initialvalue+$raise")
+	printf '%s' "Final value ($): "
+	printf '%0.2f\n' "$finalvalue"
+	printf '%s' "Raise ($): "
+	printf '%0.2f\n' "$raise"
+	read -s pause
+	start
+}
+
+simplepercentagemenu() {
+	printf "Percentage: "
+	read -r percentage
+	help n $perchoice
+	printf "Value: "
+	read -r value #| sed "s/%//g"
+	help n $perchoice
+	finalvalue=$(bc <<< "scale=2; ($percentage/100)*$value")
+	printf '\n%s' "Percentage (%): "
+	printf '%0.2f\n' "$percentage"
+	printf '%s\n' "From: "
+	printf '%0.2f\n' "$value"
+	printf '%s\n' "Final value: "
+	printf '%0.2f\n' "$finalvalue"
+	read -s pause
+	start
+}
+
+
+incdecmenu() {
+	printf "From: "
+	read -r fromval
+	help n $perchoice
+	printf "To: "
+	read -r toval #| sed "s/%//g"
+	help n $perchoice
+	percentage=$(bc <<< "scale=2; (($toval*100)/$fromval)-100")
+	printf '\n%s' "From: "
+	printf '%0.2f\n' "$fromval"
+	printf '%s' "To: "
+	printf '%0.2f\n' "$toval"
+	printf '%s' "Percentage (%): "
+	printf '%0.2f\n' "$percentage"
+	read -s pause
+	start
+}
+
+percxymenu() {
+	printf "X value: "
+	read -r xval
+	help n $perchoice
+	printf "Y value: "
+	read -r yval #| sed "s/%//g"
+	help n $perchoice
+	percentage=$(bc <<< "scale=2; ($xval*100)/$yval")
+	printf '\n%s' "X value: "
+	printf '%0.2f\n' "$xval"
+	printf '%s' "Y value: "
+	printf '%0.2f\n' "$yval"
+	printf '%s' "Percentage (%): "
+	printf '%0.2f\n' "$percentage"
+	read -s pause
+	start
+}
+
+start() {
+	clear
+	printf "H E L P E R\n"
+	select option in "${menus[@]}"
+	do
+		help y
+		case $option in
+		"Percentage")
+		select perchoice in "${percentagemenu[@]}"
+		do
+			help n $perchoice
+			case $perchoice in
+			"Discount") discountmenu ;;
+			"Increase") increasemenu ;;
+			"Simple Percentage") simplepercentagemenu ;;
+			"Percentage of X from Y") percxymenu ;;
+			"Increase / Decrease") incdecmenu ;;
+			* | "") start ;;
+			esac
+		done
+		;;
+		"Exit") exit 0 ;;
+		esac
+	done
+}
+
+start
+
+# since this is a two menu program i should put the first select statement in a function so that then i can make "back" buttons 
+# check out column command

@@ -1,0 +1,53 @@
+#!/bin/bash
+# max = 255 / min = 1
+# usage: brightless + $2
+logfile="$HOME/.brightmon"
+rootlog="$HOME/.brightmonroot"
+logmonitor=$(ls /sys/class/backlight/)
+file="/sys/class/backlight/$(cat $logfile)/brightness"
+statsresult=$((($(cat $file) * 100) / 255))
+
+if [ ! -f $logfile ]; then
+	clear
+	printf "Choose a monitor\n"
+	printf "$logmonitor\n\n> "
+	read mon
+	printf "$mon" > "$logfile"
+fi
+
+case $1 in
+"-s")
+if (( $2 <= 100 && $2 >= 0 )); then
+	clear
+	results=$((($2 * 255) / 100))
+	sudo echo "$results" > "$file"
+fi
+echo "$2"
+;;
+"-n")
+result=$(($2 * 1))
+resultfull=$(($result / 100))
+clear
+if [ ! -f $rootlog ]; then
+	printf "Choose a monitor\n"
+	xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1
+	printf "\n> "
+	read monroot
+	printf "$monroot" > $rootlog
+fi
+xrandr --output "$(cat $rootlog)" --brightness $resultfull
+;;
+*) printf "%s" "☀️ $statsresult%"
+;;
+esac
+
+
+#255 = 100%
+#cat file = ?%
+
+
+#input * 255 
+#/ 100
+
+# 0.7 = 70
+# ? = $2
