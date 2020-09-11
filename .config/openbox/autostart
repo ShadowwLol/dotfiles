@@ -1,0 +1,1 @@
+dunst & feh --bg-fill ~/Documents/Wallpaper.png & setxkbmap -layout pt && tint2 -c ~/Documents/tint2/minima.tint2rc & nm-applet & copyq & volumeicon & flameshot
