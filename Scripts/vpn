@@ -1,0 +1,8 @@
+#!/bin/bash
+# Usage: vpn -s / connect / vpn -d / disconnect
+
+case $1 in
+"-s") sudo protonvpn c -f ; sudo protonvpn status ;;
+"-d") sudo protonvpn disconnect ; sudo protonvpn status ;;
+*) printf "Usage:\nvpn -s : connect\nvpn -d : disconnect\n" ;;
+esac
