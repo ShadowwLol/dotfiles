@@ -146,13 +146,13 @@ execp_icon_h = 0
 #-------------------------------------
 # Executor 2
 execp = new
-execp_command = printf '%s\n' "Vpn: $(protonvpn status | awk '/^Status/ {print $2}')"
+execp_command = printf '%s\n' "Vpn: $(vpn -s | awk '/^Status/ {print $2}')"
 execp_interval = 2
 execp_has_icon = 0
 execp_cache_icon = 0
 execp_continuous = 0
 execp_markup = 0
-execp_lclick_command = notify-send "Vpn:" "$(protonvpn status)"
+execp_lclick_command = notify-send "Vpn:" "$(vpn -s)"
 execp_rclick_command =
 execp_mclick_command =
 execp_uwheel_command =
