@@ -7,14 +7,6 @@ logmonitor=$(ls /sys/class/backlight/)
 file="/sys/class/backlight/$(cat $logfile)/brightness"
 statsresult=$((($(cat $file) * 100) / 255))
 
-if [ ! -f $logfile ]; then
-	clear
-	printf "Choose a monitor\n"
-	printf "$logmonitor\n\n> "
-	read mon
-	printf "$mon" > "$logfile"
-fi
-
 case $1 in
 "-s")
 if (( $2 <= 100 && $2 >= 0 )); then
@@ -46,7 +38,6 @@ esac
 #cat file = ?%
 
 
-#input * 255 
 #/ 100
 
 # 0.7 = 70

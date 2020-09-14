@@ -14,7 +14,7 @@ read -s pause ; reset
 ;;
 "asm32")
 # Compile assembly with elf32
-nasm -f elf32 -o "$3.o" "$2" ; ld -m elf_i386 "$3.o" -o "$3" 
+nasm -f elf32 -o "$3.o" "$2" ; ld -m elf_i386 "$3.o" -o "$3"
 case $4 in
 "-k")
 ;;
@@ -40,6 +40,10 @@ g++ "$2" -o "$3"
 # Compile C
 gcc "$2" -o "$3"
 ;;
+"tex")
+	file=$(readlink -f $1)
+	[[ $file != *.tex ]] && file=$file.tex
+	pdflatex $file && xdg-open $file.pdf ;;
 *) printf "I don't understand, please check out compl -help\n" ; exit 1
 ;;
 esac

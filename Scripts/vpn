@@ -2,7 +2,8 @@
 # Usage: vpn -s / connect / vpn -d / disconnect
 
 case $1 in
-"-s") sudo protonvpn c -f ; sudo protonvpn status ;;
-"-d") sudo protonvpn disconnect ; sudo protonvpn status ;;
-*) printf "Usage:\nvpn -s : connect\nvpn -d : disconnect\n" ;;
+"-c") sudo protonvpn c -f ; protonvpn status ;;
+"-d") sudo protonvpn disconnect ; protonvpn status ;;
+"-s") protonvpn status ;;
+*) printf "Usage:\nvpn -c : connect\nvpn -d : disconnect\nvpn -s : status\n" ;;
 esac
