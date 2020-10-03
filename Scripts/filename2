@@ -1,0 +1,133 @@
+#!/bin/bash
+# USAGE:
+#	$0	     $1     $2
+# filename2 option file
+#
+# OPTIONS:
+# -a = all files and directories
+# -af = all files
+# -ad = all directories
+# -s = a file or directory
+case $1 in
+"-a")
+printf "%s" "Replace: "
+read replacing
+	case $replacing in
+	"") exit 1 ;;
+	*)
+	printf "%s" "With: "
+	read with
+		case $with in
+		"") exit 1 ;;
+		*)
+		for f in *
+		do
+		  new="${f//$replacing/$with}"
+		  if [ "$new" != "$f" ]
+		  then
+		    if [ -e "$new" ]
+		    then
+		      printf "%s\n" "not renaming $f because $new already exists"
+		    else
+		      printf "%s\n" "Replacing $f with $new"
+		    mv "$f" "$new"
+		  fi
+		fi
+		done
+		;;
+		esac
+	;;
+	esac
+;;
+"-af")
+printf "%s" "Replace: "
+read replacing
+	case $replacing in
+	"") exit 1 ;;
+	*)
+	printf "%s" "With: "
+	read with
+		case $with in
+		"") exit 1 ;;
+		*)
+		for f in $(ls -p | grep -v /)
+		do
+		  new="${f//$replacing/$with}"
+		  if [ "$new" != "$f" ]
+		  then
+		    if [ -e "$new" ]
+		    then
+		      printf "%s\n" "not renaming $f because $new already exists"
+		    else
+		      printf "%s\n" "Replacing $f with $new"
+		    mv "$f" "$new"
+		  fi
+		fi
+		done
+		;;
+		esac
+	;;
+	esac
+;;
+"-ad")
+printf "%s" "Replace: "
+read replacing
+	case $replacing in
+	"") exit 1 ;;
+	*)
+	printf "%s" "With: "
+	read with
+		case $with in
+		"") exit 1 ;;
+		*)
+		for f in $(ls -p | grep /)
+		do
+		  new="${f//$replacing/$with}"
+		  if [ "$new" != "$f" ]
+		  then
+		    if [ -e "$new" ]
+		    then
+		      printf "%s\n" "not renaming $f because $new already exists"
+		    else
+		      printf "%s\n" "Replacing $f with $new"
+		    mv "$f" "$new"
+		  fi
+		fi
+		done
+		;;
+		esac
+	;;
+	esac
+;;
+"-s") 
+printf "%s" "Replace: "
+read replacing
+	case $replacing in
+	"") exit 1 ;;
+	*)
+	printf "%s" "With: "
+	read with
+		case $with in
+		"") exit 1 ;;
+		*)
+		for f in $2
+		do
+		  new="${f//$replacing/$with}"
+		  if [ "$new" != "$f" ]
+		  then
+		    if [ -e "$new" ]
+		    then
+		      printf "%s\n" "not renaming $f because $new already exists"
+		    else
+		      printf "%s\n" "Replacing $f with $new"
+		    mv "$f" "$new"
+		  fi
+		fi
+		done
+		;;
+		esac
+	;;
+	esac
+;;
+*) printf "F I L E N A M E 2\nOptions:\n-a\tAll files and directories\n-af\tAll files\n-ad\tAll directories\n-s\tA file or a directory\nUsage:\nfilename2 -option optional_file_or_dir\n"
+esac

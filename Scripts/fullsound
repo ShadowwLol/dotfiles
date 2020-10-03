@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cardnum=1
+
+case "$1" in
+"toggle") amixer -c $cardnum sset Master toggle ;; esac

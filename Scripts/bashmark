@@ -11,6 +11,7 @@ function add()
 	;;
 	esac
 
+
 	if grep -wq "$linkname" "$HOME/.bashmark"
 	then
 		notify-send "Error: Name used" "Click to dismiss."
@@ -24,6 +25,9 @@ function add()
 	;;
 	esac
 
+
+	[[ "$link" != https://* && $link != http://* ]] && protocol=$(printf "Http\nHttps" | dmenu) && link=$(printf "$protocol"  | tr '[:upper:]' '[:lower:]')://$link
+ 
 	if grep -wq "$link" "$HOME/.bashmark" 
 	then
 		notify-send "Error: Link used" "Click to dismiss."

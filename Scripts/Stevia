@@ -1,0 +1,21 @@
+#!/bin/bash
+app="Stevia"
+PS3='> '
+musicdir="$HOME/Music/"
+cd $musicdir
+songs=$(find . -type f | sed "s/\.\///")
+main() {
+	printf "%s\n" ${app^^} | sed 's/./& /g'
+	select option in $songs
+	do
+		echo $option
+		case $option in
+		"") clear ; exit 0 ;;
+		*) clear ; printf "%s\n" ${app^^} | sed 's/./& /g' ; printf "%s\n\n" "Playing: $option" ; mpv "$musicdir$option" ; clear ; main
+		;;
+		esac
+	done
+}
+clear
+[ -f ~/.config/mpv/input.conf ] && printf "%s\n" "Inputs:" ; cat ~/.config/mpv/input.conf | sed '/^\s*$/d' ; read -s pause ; clear
+cd $musicdir ; main

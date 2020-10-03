@@ -1,0 +1,11 @@
+#!/bin/bash
+menu=$(printf "Shutdown\nHibernate\nReboot\nLogout\nSuspend\nLock" | sort | dmenu -i -l 8)
+case $menu in
+"Shutdown") shutdown -P now ;;
+"Reboot") shutdown -r now ;;
+"Suspend") systemctl suspend ;;
+"Hibernate") systemctl hibernate ;;
+"Logout") logout ;;
+"Lock") slock ;;
+*) exit ;;
+esac
