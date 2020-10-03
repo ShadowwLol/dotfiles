@@ -180,34 +180,39 @@
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <!-- Keybindings for desktop switching -->
+    <keybind key="W-l">
+      <action name="Execute">
+		  <command>~/Scripts/poww</command>
+      </action>
+    </keybind>
     <keybind key="W-p">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/bashpass</command>
+        <command>~/Scripts/bashpass</command>
       </action>
     </keybind>
     <keybind key="W-t">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/bashmark</command>
+        <command>~/Scripts/bashmark</command>
       </action>
     </keybind>
     <keybind key="W-r">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/dmenurecord</command>
+        <command>~/Scripts/dmenurecord</command>
       </action>
     </keybind>
     <keybind key="W-n">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/dmenuumount</command>
+        <command>~/Scripts/dmenuumount</command>
       </action>
     </keybind>
     <keybind key="W-b">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/dmenumount</command>
+        <command>~/Scripts/dmenumount</command>
       </action>
     </keybind>
     <keybind key="W-m">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/displayselect</command>
+        <command>~/Scripts/displayselect</command>
       </action>
     </keybind>
     <keybind key="S-C-F1">
@@ -218,17 +223,17 @@
     </keybind>
     <keybind key="W-z">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/wmtiler -g</command>
+        <command>~/Scripts/wmtiler -g</command>
       </action>
     </keybind>
     <keybind key="W-x">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/wmtiler -v</command>
+        <command>~/Scripts/wmtiler -v</command>
       </action>
     </keybind>
     <keybind key="W-c">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/wmtiler -h</command>
+        <command>~/Scripts/wmtiler -h</command>
       </action>
     </keybind>
     <keybind key="S-C-F2">
@@ -275,12 +280,12 @@
     </keybind>
     <keybind key="W-e">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/dmenuemoji</command>
+        <command>~/Scripts/dmenuemoji</command>
       </action>
     </keybind>
     <keybind key="Print">
       <action name="Execute">
-        <command>/home/shadoww/Scripts/screentake</command>
+        <command>~/Scripts/screentake</command>
       </action>
     </keybind>
     <keybind key="A-space">
@@ -328,12 +333,12 @@
     </keybind>
     <keybind key="W-Right">
       <action name="Execute">
-        <command>backlight_control +5</command>
+		  <command>sudo ~/Scripts/brightless -s 100</command>
       </action>
     </keybind>
     <keybind key="W-Left">
       <action name="Execute">
-        <command>backlight_control -5</command>
+		  <command>sudo ~/Scripts/brightless -s 50</command>
       </action>
     </keybind>
     <keybind key="C-space">
@@ -665,7 +670,7 @@
   # order that they appear in this list
 
 
-    # each rule element can be left out or set to 'default' to specify to not 
+    # each rule element can be left out or set to 'default' to specify to not
     # change that attribute of the window
 
     <decor>no</decor>
