@@ -7,14 +7,20 @@ set noundofile
 set clipboard=unnamed
 set enc=utf-8
 set bg=dark
-map <C-l> :Lex!<CR>
+nnoremap <C-m> :Lex<CR>
 set relativenumber
+
+nnoremap <Up> <nop>
+nnoremap <Down> <nop>
+nnoremap <Left> <nop>
+nnoremap <Right> <nop>
+
 set list
 nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
 imap <F3> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 nnoremap Q <nop>
-xnoremap K :move '<-2<CR>gv-gv
 xnoremap J :move '>+1<CR>gv-gv
+xnoremap K :move '<-2<CR>gv-gv
 let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
 let &t_EI = "\<Esc>[2 q"
@@ -22,11 +28,6 @@ set wildmode=longest,list,full
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 map <leader>o :setlocal spell! spelllang=en_us,pt_pt<CR>
 set splitbelow splitright
-
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
 
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 autocmd BufWritePre * %s/\s\+$//e
@@ -38,3 +39,26 @@ autocmd BufWritepre * %s/\n\+\%$//e
 set listchars=tab:→\ ,eol:↲
 set tabstop=4
 set shiftwidth=4
+set ignorecase smartcase
+set incsearch
+
+map <Leader>c :w! \| !compiler <c-r>%<CR>
+map <Leader>p :!opout <c-r>%<CR><CR>
+autocmd VimLeave *.tex !texclear %
+set nowrap
+set hidden
+set pumheight=10
+set fileencoding=utf-8
+set ruler
+set cmdheight=2
+set iskeyword+=-
+set mouse=a
+set conceallevel=0
+set laststatus=0
+
+set showmode
+" Alternate way to save
+nnoremap <C-s> :w<CR>
+" Enabling swap files
+set swapfile
+nmap <Space><Space> <Esc>/<++><CR><Esc>cf>
