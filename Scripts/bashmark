@@ -2,6 +2,10 @@
 
 # parameters - name link
 
+dir="$HOME/.config/.bashmark"
+mainfile="$dir/.main"
+[ ! -d $dir ] && mkdir -p $dir
+[ ! -f $mainfile ] && touch $mainfile
 function add()
 {
 	linkname=$(printf "" | dmenu -p "Name:")
@@ -12,7 +16,7 @@ function add()
 	esac
 
 
-	if grep -wq "$linkname" "$HOME/.bashmark"
+	if grep -wq "$linkname" "$mainfile"
 	then
 		notify-send "Error: Name used" "Click to dismiss."
 		exit
@@ -27,30 +31,24 @@ function add()
 
 
 	[[ "$link" != https://* && $link != http://* ]] && protocol=$(printf "Http\nHttps" | dmenu) && link=$(printf "$protocol"  | tr '[:upper:]' '[:lower:]')://$link
- 
-	if grep -wq "$link" "$HOME/.bashmark" 
+
+	if grep -wq "$link" "$mainfile"
 	then
 		notify-send "Error: Link used" "Click to dismiss."
 		exit
 	fi
 
-	printf '%s %s\n' "$linkname" "$link" >> "$HOME/.bashmark"
+	printf '%s %s\n' "$linkname" "$link" >> "$mainfile"
 }
 
 function get()
 {
-	trg=$(cat "$HOME/.bashmark" | awk '{print $1}' | sort | dmenu -i -p "Bashmark")
-	if [ $trg != "" ]; then
-		grep -w "$trg" "$HOME/.bashmark" | awk '{print $2}' | xclip -selection clipboard
+	trg=$(cat "$mainfile" | awk '{print $1}' | sort | dmenu -i -p "Bashmark")
+	if [ "$trg" != "" ]; then
+		grep -w "$trg" "$mainfile" | awk '{print $2}' | xclip -selection clipboard
 		notify-send "💻 $trg copied to the clipboard." "Click to dismiss."
 	fi
 }
-
-if [ ! -f "$HOME/.bashmark" ]
-then
-	touch "$HOME/.bashmark"
-fi
-
 menu=$(printf "Add\nGet" | dmenu -i -p "Bashmark")
 
 case $menu in

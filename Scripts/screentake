@@ -1,44 +1,28 @@
 #!/bin/bash
 
-# NOT FINISHED
-# STILL OPTIMIZING
-
 wording=""
-choicepath=""
 options=""
-
 screenshotdirs="$HOME/Images/Screenshots/"
-logfile="$HOME/.sctsaker"
 
 function nodel()
 {
-	scrot $options "$choicepath"
-	notify-send "Screenshot taken" "Saved in: $choicepath"
+	scrot $options "$path"
+	notify-send "Screenshot taken" "Saved in: $path"
 }
 
 function del()
 {
 	notify-send "$wording" "Click to dismiss"
-	scrot $options "$choicepath"
-	notify-send "Screenshot taken" "Saved in: $choicepath"
-}
-
-function defpath()
-{
-	mkdir -p "$screenshotdirs"
-	printf "$screenshotdirs" >> $logfile
+	scrot $options "$path"
+	notify-send "Screenshot taken" "Saved in: $path"
 }
 
 function fullscreen()
 {
-	fullchoice=$(printf "" | dmenu -p "Filename:")
-	[ "$fullchoice" = "" ] && fullchoice="screen_%Y-%m-%d_%H-%M-%S"
-	[[ $fullchoice != *.png ]] || [[ $fullchoice != *.jpg ]] || [[ $fullchoice != *.jpeg ]] && fullchoice="$fullchoice.png"
-	choicepath="$shotpath$fullchoice"
 	delmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
 	case "$delmenu" in
 	"No delay")
-	options="" ; nodel ; scrot "$shotpath$fullchoice" ;;
+	options="" ; nodel ;;
 	"Delay")
 	delfullchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
 	case "$delfullchoice" in
@@ -62,10 +46,6 @@ function fullscreen()
 
 function partial()
 {
-	partialchoice=$(printf "" | dmenu -p "Filename:")
-	[ "$partialchoice" = "" ] && partialchoice="screen_%Y-%m-%d_%H-%M-%S"
-	[[ $partialchoice != *.png ]] || [[ $partialchoice != *.jpg ]] || [[ $partialchoice != *.jpeg ]] && partialchoice="$partialchoice.png"
-	choicepath="$shotpath$partialchoice"
 	delpartmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
 	case "$delpartmenu" in
 	"No delay") options="-bs" ; nodel ;;
@@ -91,10 +71,6 @@ function partial()
 
 function window()
 {
-	winchoice=$(printf "" | dmenu -p "Filename:")
-	[ "$winchoice" = "" ] && winchoice="screen_%Y-%m-%d_%H-%M-%S"
-	[[ $winchoice != *.png ]] || [[ $winchoice != *.jpg ]] || [[ $winchoice != *.jpeg ]] && winchoice="$winchoice.png"
-	choicepath="$shotpath$winchoice"
 	acwinmenu=$(printf "Active window\nSelect window" | dmenu -i -p "Screentake")
 	case "$acwinmenu" in
 	"Active window")
@@ -218,68 +194,35 @@ function window()
 	esac
 }
 
-shotpath="$(cat $logfile)"
-
-if [ -f "$logfile" ]
-then
-	if [ "$(cat $logfile)" != "" ]
-	then
-		if [ ! -d "$(cat $logfile)" ]
-		then
-			rm $logfile
-			touch $logfile
-			defpath
-		fi
-	else
-		screenpath=$(printf "" | dmenu -p "Screenshot Path:")
-		if [ -d "$screenpath" ]
-		then
-			printf "$screenpath" >> $logfile
-		else
-			pathmen=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
-			if [ $pathmen = "Create it" ]
-			then
-				mkdir -p "$screenpath"
-				printf "$screenpath" >> $logfile
-			else
-				defpath
-			fi
-		fi
-			
-	fi
-	printf ""
-else 
-	touch $logfile
-	scpath=$(printf "" | dmenu -p "Screenshot Path:")
-	if [ -d "$scpath" ]
-	then
-		printf "$scpath" >> $logfile
-	else
-		pathmenu=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
-		if [ $pathmenu = "Create it" ]
-		then
-			mkdir -p "$scpath"
-			printf "$scpath" >> $logfile
-		else
-			mkdir -p $HOME/Images/Screenshots/
-			printf "$HOME/Images/Screenshots/" >> $logfile
-		fi
-	fi
+if [ ! -d "$screenshotdirs" ]; then
+	mkdir -p $screenshotdirs
 fi
 
-menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
 
-case $menu in
-"Partial")
-partial
-;;
-"Window")
-window
-;;
-"Fullscreen")
-fullscreen
-;;
-*)
-exit
-;;
-esac
+
+main() {
+	menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
+	[ -z "$menu" ] && exit 1
+	filename=$(printf "" | dmenu -p "Filename:")
+	[ ! -z "$filename" ] && filename="screen_%Y-%m-%d_%H-%M-%S"
+	[[ $filename != *.png ]] || [[ $filename != *.jpg ]] || [[ $filename != *.jpeg ]] && filename="$filename.png"
+	path="$screenshotdirs$filename"
+	case $menu in
+	"Partial")
+	partial
+	;;
+	"Window")
+	window
+	;;
+	"Fullscreen")
+	fullscreen
+	;;
+	*)
+	exit
+	;;
+	esac
+
+}
+
+# Start
+main

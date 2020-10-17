@@ -3,20 +3,13 @@
 # parameters - service username password
 # GPG encryption
 
-# ENCRYPT: 
-#gpg -e -r "$catkey" "$db"
-# remove the other file
-
-# DECRYPT:
-# gpg -d $db | tail -n +3 file.txt | awk '{print $1}' | sort | dmenu -i -p "Bashpass"
-
 # IF THE GPG KEY WAS MISWRITTEN DELETE THE .bashpass/key FILE AND RERUN THE SCRIPT
-# --trust-model always
 
-trap 'enc;exit' 0 1 2 3 15 19
+trap 'enc;exit' 1 2 3 15 19
 dbdir="$HOME/.bashpass"
 db="$dbdir/db"
 dbenc="$dbdir/db.gpg"
+EDITOR=subl
 
 enc() {
 	# ENCRYPT
@@ -32,29 +25,26 @@ dec() {
 
 
 add() {
-	if [ ! -f "$dbenc" ]
-	then
-		enc
-	fi
+	[ ! -f "$dbenc" ] && enc
 	service=$(printf "" | dmenu -p "Service:")
 	case $service in
 	"")
 	notify-send "Error: invalid service" "Click to dismiss."
-	exit
+	exit 1
 	;;
 	esac
 
 	if grep -wq "$service" "$db"
 	then
 		notify-send "Error: Service name used" "Click to dismiss."
-		exit
+		exit 1
 	fi
 
 	username=$(printf "" | dmenu -p "Username:")
 	case $username in
 	"")
 	notify-send "Error: invalid username" "Click to dismiss."
-	exit
+	exit 1
 	;;
 	esac
 
@@ -62,7 +52,7 @@ add() {
 	case $pass in
 	"")
 	notify-send "Error: invalid password" "Click to dismiss."
-	exit
+	exit 1
 	;;
 	esac
 
@@ -70,54 +60,50 @@ add() {
 
 	printf '%s %s %s\n' "$service" "$username" "$pass" >> "$db"
 
-	exit
+	enc ; exit 0
 }
 
 edit() {
-	dec
-	xdg-open "$db"
+	dec && $EDITOR "$db" && exit 0
 }
 
 
 get() {
 	dec
 	servtrg=$(cat "$db" | awk '{print $1}' | sort | dmenu -i -p "Bashpass")
-	if [ $servtrg != "" ]; then
+	if [ ! -z "$servtrg" ]; then
 		uspassmenu=$(printf "Username\nPassword" | dmenu -i -p "Bashpass")
 		case $uspassmenu in
 		"Username")
 		grep -w "$servtrg" "$db" | awk '{print $2}' | xclip -selection clipboard
 		notify-send "💻 $servtrg's username copied to the clipboard." "Click to dismiss."
+		enc ; exit 0
 		;;
 		"Password")
 		grep -w "$servtrg" "$db" | awk '{print $3}' | xclip -selection clipboard
 		notify-send "💻 $servtrg's password copied to the clipboard." "Click to dismiss."
+		enc ; exit 0
 		;;
 		*)
-		exit
+		enc ; exit 0
 		;;
 		esac
 	fi
 }
 
 
-if [[ ! -d "$dbdir"  ]]; then
-	mkdir "$dbdir"
-	touch "$db"
-fi
+[ ! -d "$dbdir"  ] && mkdir "$dbdir"
 
-key="$dbdir/key"
+key="$dbdir/.key"
 
 if [[ ! -f "$key" ]] || [ ! -s "$key" ]
 then
-	touch "$key"
 	gpgmenu=$(printf "" | dmenu -p "GPG key:")
 
 	case $gpgmenu in
 	"")
 	notify-send "Error: invalid GPG key" "Click to dismiss."
-	rm -rf "$dbdir/"
-	exit
+	exit 1
 	;;
 	esac
 
@@ -127,10 +113,7 @@ fi
 
 catkey=`cat $key`
 
-if [[ -f "$db" && ! -f "$dbend" ]]
-then
-	enc
-fi
+[[ -f "$db" && ! -f "$dbenc" ]] && enc
 
 menu=$(printf "Add\nGet\nEdit" | dmenu -i -p "Bashpass")
 
@@ -142,6 +125,6 @@ get ;;
 "Edit")
 edit ;;
 *)
-exit
+exit 1
 ;;
 esac

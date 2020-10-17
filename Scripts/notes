@@ -1,15 +1,15 @@
 #!/bin/bash
-# Usage: 
-#  $0        $1			   $2	
+# Usage:
+#  $0        $1			   $2
 # notes		options		inputfile
 PS3="> "
 NOTE_DIR="$HOME/Notes/"
-READ_DIR="$HOME/Reading/Notes/"
+DIR="$HOME/Notes/Reading/"
 fmn=( "Presentation" "Pdf" );
 input=$2
 
-[ ! -d $NOTE_DIR ] && mkdir "$NOTE_DIR"
-[ ! -d $READ_DIR ] && mkdir -p "$READ_DIR"
+[ ! -d $DIR ] && mkdir -p "$DIR"
+[ -z "$input" ] && input="notes-$(date '+%Y-%m-%d-%H:%M').md"
 [[ "$input" != *.md ]] && input=$input.md
 
 case $1 in
@@ -17,11 +17,12 @@ case $1 in
 vim "$NOTE_DIR$input"
 ;;
 "-f")
+[ -z "$2" ] && exit 1
 select choice in "${fmn[@]}"; do
 	case $choice in
-	"Presentation") pandoc $input -t beamer -o "$READ_DIR${input//.md}.pdf" ; exit 0 ;;
-	"Pdf") pandoc -s -o "$READ_DIR${input//.md}.pdf" $input ; exit 0 ;;
+	"Presentation") pandoc $input -t beamer -o "$DIR${input//.md}.pdf" ; exit 0 ;;
+	"Pdf") pandoc -s -o "$DIR${input//.md}.pdf" $input ; exit 0 ;;
 	esac
 done ;;
-*) printf "Options:\n-c -> Create a new note\n-f -> Format a note\nUsage:\nnotes option inputfile\n" ;;
+*) printf "Options:\n-c\tCreate a new note\n-f\tFormat a note\nUsage:\nnotes option inputfile\n" ;;
 esac

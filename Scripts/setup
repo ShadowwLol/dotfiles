@@ -1,0 +1,25 @@
+#!/bin/bash
+dotconfig="$HOME/.config/"
+
+overwrite() {
+	printf "$1 already exists, overwrite? (y,n) \n> " ; read over
+	case $over in
+	"y" | "Y") rm "$2" ; break;;
+	*) ;;
+	esac
+}
+
+vimstart() {
+	[ -f "$HOME/.vimrc" ]
+	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/.vimrc
+	case $? in
+	0) printf "%s\n" "Downloaded .vimrc" ;;
+	*) printf "%s\n" "Error: Downloading .vimrc" ;;
+	esac
+}
+
+start() {
+	[ ! -d "$dotconfig" ] && mkdir $dotconfig
+	[ -x "$(command -v vim)" ] && vimstart || sudo pacman -S vim --noconfirm
+}
+start
