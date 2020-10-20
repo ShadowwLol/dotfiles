@@ -10,10 +10,10 @@ set bg=dark
 nnoremap <C-n> :Lex<CR>:vertical resize 20<CR>
 set relativenumber
 
-nnoremap <Up> <nop>
-nnoremap <Down> <nop>
-nnoremap <Left> <nop>
-nnoremap <Right> <nop>
+nnoremap <Up> :resize +4<CR>
+nnoremap <Down> :resize -4<CR>
+nnoremap <Left> :vertical resize +4<CR>
+nnoremap <Right> :vertical resize -4<CR>
 
 set list
 nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
