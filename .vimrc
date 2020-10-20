@@ -62,3 +62,5 @@ nnoremap <C-s> :w<CR>
 " Enabling swap files
 set swapfile
 nmap <Space><Space> <Esc>/<++><CR><Esc>cf>
+au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
