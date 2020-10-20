@@ -7,7 +7,7 @@ set noundofile
 set clipboard=unnamed
 set enc=utf-8
 set bg=dark
-nnoremap <C-m> :Lex<CR>
+nnoremap <C-n> :Lex<CR>:vertical resize 20<CR>
 set relativenumber
 
 nnoremap <Up> <nop>
@@ -41,10 +41,6 @@ set tabstop=4
 set shiftwidth=4
 set ignorecase smartcase
 set incsearch
-
-map <Leader>c :w! \| !compiler <c-r>%<CR>
-map <Leader>p :!opout <c-r>%<CR><CR>
-autocmd VimLeave *.tex !texclear %
 set nowrap
 set hidden
 set pumheight=10
