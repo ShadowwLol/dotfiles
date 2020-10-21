@@ -6,48 +6,12 @@ URxvt.perl-ext-common: default,selection-to-clipboard,pasta,matcher,keyboard-sel
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.url-launcher:   /usr/bin/brave
 URxvt.underlineURLs:  True
-URxvt.matcher.button: 1 
+URxvt.matcher.button: 1
 URxvt.keysym.M-Escape:perl:keyboard-select:activate
 URxvt.keysym.Control-Shift-V:     perl:pasta:paste
 
 !! Colorscheme
 
-! special
-*.foreground: #93a1a1
-*.background: #141c21
-*.cursorColor: #afbfbf
-
-! black
-*.color0: #263640
-*.color8: #4a697d
-
-! red
-*.color1: #d12f2c
-*.color9: #fa3935
-
-! green
-*.color2: #62E35D
-*.color10: #A2FD68
-
-! yellow
-*.color3: #b08500
-*.color11: #d9a400
-
-! blue
-*.color4: #2587cc
-*.color12: #2ca2f5
-
-! magenta
-*.color5: #696ebf
-*.color13: #8086e8
-
-! cyan
-*.color6: #289c93
-*.color14: #33c5ba
-
-! white
-! *.color7: #bfbaac
-! *.color15: #fdf6e3
 
 !! URxvt Appearance
 *.font: xft:monospace:style=Regular:size=11
@@ -77,54 +41,39 @@ URxvt.keysym.Control-Left: \033[1;5D
 ! Base16 Default Dark
 ! Scheme: Chris Kempson (http://chriskempson.com)
 
-#define base00 #181818
-#define base01 #282828
-#define base02 #383838
-#define base03 #585858
-#define base04 #b8b8b8
-#define base05 #d8d8d8
-#define base06 #e8e8e8
-#define base07 #f8f8f8
-#define base08 #ab4642
-#define base09 #dc9656
-#define base0A #f7ca88
-#define base0B #a1b56c
-#define base0C #86c1b9
-#define base0D #7cafc2
-#define base0E #ba8baf
-#define base0F #a16946
+! special
+*.foreground:   #c0c5ce
+*.background:   #2b303b
+*.cursorColor:  #c0c5ce
 
-*foreground:   base05
-#ifdef background_opacity
-*background:   [background_opacity]base00
-#else
-*background:   base00
-#endif
-*cursorColor:  base05
+! black
+*.color0:       #2b303b
+*.color8:       #6d8191
 
-*color0:       base00
-*color1:       base08
-*color2:       base0B
-*color3:       base0A
-*color4:       base0D
-*color5:       base0E
-*color6:       base0C
-*color7:       base05
+! red
+*.color1:       #bf616a
+*.color9:       #597eee
 
-*color8:       base03
-*color9:       base08
-*color10:      base0B
-*color11:      base0A
-*color12:      base0D
-*color13:      base0E
-*color14:      base0C
-*color15:      base07
+! green
+*.color2:       #a3be8c
+*.color10:      #fbe65b
 
-! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
-! use 'shell' template to set these if necessary
-*color16:      base09
-*color17:      base0F
-*color18:      base01
-*color19:      base02
-*color20:      base04
-*color21:      base06
+! yellow
+*.color3:       #f3993c
+*.color11:      #ebcb8b
+
+! blue
+*.color4:       #8fa1b3
+*.color12:      #d66de2
+
+! magenta
+*.color5:       #b48ead
+*.color13:      #b48ead
+
+! cyan
+*.color6:       #96b5b4
+*.color14:      #2bbae8
+
+! white
+*.color7:       #2ae558
+*.color15:      #eff1f5
