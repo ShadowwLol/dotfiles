@@ -55,6 +55,9 @@ set laststatus=0
 set showmode
 " Alternate way to save
 nnoremap <C-s> :w<CR>
+" Tabs
+nnoremap <C-t> :tabnew<CR>
+nnoremap <C-w> :tabclose<CR>
 " Enabling swap files
 set swapfile
 nmap <Space><Space> <Esc>/<++><CR><Esc>cf>
