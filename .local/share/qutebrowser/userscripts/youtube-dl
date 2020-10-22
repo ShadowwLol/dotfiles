@@ -5,23 +5,16 @@ videolocation="$HOME/Videos/Downloads/"
 audiolocation="$HOME/Music/Downloads/"
 
 
-if [ ! -d "$videolocation" ]; then
-	mkdir -p "$videolocation"
-fi
+[ ! -d "$videolocation" ] && mkdir -p "$videolocation"
 
-if [ ! -d "$audiolocation" ]; then
-	mkdir -p "$audiolocation"
-fi
+[ ! -d "$audiolocation" ] && mkdir -p "$audiolocation"
 
 qualities=$(youtube-dl --list-formats "$url")
 
-if [ $? != 0 ]; then
-	printf 'message-error "Unsupported URL: %s"' "$url" >>"$QUTE_FIFO"
-	exit
-fi
+[ $? != 0 ] && (printf 'message-error "Unsupported URL: %s"' "$url" >>"$QUTE_FIFO" ; exit 1)
 
 choice=$(printf "Video\nAudio" | sort | dmenu -i )
-function vid(){
+vid() {
 	quality=$({
 		printf 'best\nbestvideo\n'
 		printf '%s\n' "$qualities" | grep '^[[:digit:]]' | tac | sed '/audio/d'
@@ -35,16 +28,13 @@ function vid(){
 	quality=$(printf '%s' "$quality" | awk '{ print $1 }') ; printf 'download %s\n' "$(youtube-dl -o "$videolocation%(title)s.%(ext)s" --restrict-filenames --format "$quality" $url)"
 }
 
-function audio(){
+audio() {
 	quality=$({
 		printf 'bestaudio\n'
 		printf '%s\n' "$qualities" | grep -i "audio"
 	} | dmenu -l 10 -p 'quality ')
 
-	if [ $? != 0 ]; then
-		notify-send "Error"
-		exit
-	fi
+	[ $? != 0 ] && (notify-send "Error" ; exit 1)
 
 	qualitymenu=$(printf '%s' "$quality" | awk '{ print $1 }')
 	qualityop=$(printf '%s' "$quality" | awk '{ print $2 }')
