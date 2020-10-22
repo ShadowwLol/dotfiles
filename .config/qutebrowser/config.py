@@ -18,9 +18,13 @@ interceptor.register(filter_yt)
 
 # block autoplay
 config.set('content.autoplay', False)
-
 # Cookies
 config.set('content.cookies.accept', 'no-unknown-3rdparty')
+# Notifications
+config.set('content.notifications', False)
+# Tabs
+config.set('colors.tabs.even.bg', '#232323')
+config.set('colors.tabs.odd.bg', '#232323')
 
 # Zoom default
 config.set('zoom.default', 85)
@@ -48,14 +52,14 @@ config.bind('Xs', 'spawn --userscript ytmpv')
 #open video in hints            bind æ hint links spawn tsp mpv {hint-url}
 #open currently playing video            bind Æ spawn tsp mpv {url}
 
-#download video in hints        
+#download video in hints
 #config.bind('XY','hint links spawn youtube-dl -o "~/Videos/Downloads/%(title)s.%(ext)s" --restrict-filenames {hint-url}')
 
-#download currently playing video        
+#download currently playing video
 #config.bind('Xy','spawn youtube-dl -o "~/Videos/Downloads/%(title)s.%(ext)s" --restrict-filenames {url}')
 
-#download music in hints        
+#download music in hints
 #config.bind('XS','hint links spawn youtube-dl -o "~/Music/Downloads/%(title)s.%(ext)s" -x --audio-quality 0 --audio-format "mp3" --restrict-filenames {hint-url}')
 
-#download currently playing music    
+#download currently playing music
 #config.bind('Xs','spawn youtube-dl -o "~/Music/Downloads/%(title)s.%(ext)s" -x --audio-quality 0 --audio-format "mp3" --restrict-filenames {url}')
