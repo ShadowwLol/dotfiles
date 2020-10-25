@@ -56,7 +56,6 @@ set showmode
 nnoremap <C-s> :w<CR>
 " Tabs
 nnoremap <C-t> :tabnew<CR>
-nnoremap <C-w> :tabclose<CR>
 " Enabling swap files
 set swapfile
 nmap <Space><Space> <Esc>/<++><CR><Esc>cf>
@@ -65,3 +64,7 @@ au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 au VimEnter * :Lex<CR>
 au VimEnter * :vertical resize 20<CR>
 au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+
+inoremap { {<CR><BS>}<Esc>ko
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
