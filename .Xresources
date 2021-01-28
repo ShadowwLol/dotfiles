@@ -10,45 +10,6 @@ URxvt.matcher.button: 1
 URxvt.keysym.M-Escape:perl:keyboard-select:activate
 URxvt.keysym.Control-Shift-V:     perl:pasta:paste
 
-!! Colorscheme
-! special
-*.foreground:   #c0c5ce
-*.background:   #2b303b
-*.cursorColor:  #c0c5ce
-
-! black
-*.color0:       #2b303b
-*.color8:       #6d8191
-
-! red
-*.color1:       #bf616a
-*.color9:       #597eee
-
-! green
-*.color2:       #a3be8c
-*.color10:      #fbe65b
-
-! yellow
-*.color3:       #f3993c
-*.color11:      #ebcb8b
-
-! blue
-*.color4:       #8fa1b3
-*.color12:      #d66de2
-
-! magenta
-*.color5:       #b48ead
-*.color13:      #b48ead
-
-! cyan
-*.color6:       #96b5b4
-*.color14:      #2bbae8
-
-! white
-*.color7:       #2ae558
-*.color15:      #eff1f5
-
-
 !! URxvt Appearance
 *.font: xft:monospace:style=Regular:size=11
 *.boldFont: xft:monospace:style=Bold:size=11
@@ -74,3 +35,40 @@ URxvt.keysym.Control-Up: \033[1;5A
 URxvt.keysym.Control-Down: \033[1;5B
 URxvt.keysym.Control-Right: \033[1;5C
 URxvt.keysym.Control-Left: \033[1;5D
+
+! special
+*.foreground:   #c0c5ce
+*.background:   #2b303b
+*.cursorColor:  #c0c5ce
+
+! black
+*.color0:       #2b303b
+*.color8:       #65737e
+
+! red
+*.color1:       #bf616a
+*.color9:       #bf616a
+
+! green
+*.color2:       #a3be8c
+*.color10:      #a3be8c
+
+! yellow
+*.color3:       #ebcb8b
+*.color11:      #ebcb8b
+
+! blue
+*.color4:       #8fa1b3
+*.color12:      #8fa1b3
+
+! magenta
+*.color5:       #b48ead
+*.color13:      #b48ead
+
+! cyan
+*.color6:       #96b5b4
+*.color14:      #96b5b4
+
+! white
+*.color7:       #c0c5ce
+*.color15:      #eff1f5
