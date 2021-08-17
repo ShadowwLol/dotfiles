@@ -1,0 +1,32 @@
+#!/bin/bash
+
+med=("Book" "Article" "Unpublished" "Tech Report" "Proceedings" "Phdthesis" "Misc" "Masterthesis" "Manual" "Inproceedings" "Incollection" "Inbook" "Booklet" );
+
+select choice in "${med[@]}"
+do
+	case $choice in
+	"Book")
+	media="book"
+	read -p "Tag: " tag
+	tag=${tag// /}
+	tag=${tag//,/}
+	read -p "Title: " title
+	read -p "Author: " author
+	read -p "Publisher: " publisher
+	read -p "Year: " year
+	[[ -z "$tag" || -z "$title" || -z "$author" || -z "$publisher" || -z "$year" ]] && exit 1
+	read -p "Volume (Optional): " volume
+	read -p "Series (Optional): " series
+	read -p "Address (Optional): " address
+	read -p "Edition (Optional): " edition
+	read -p "Month (Optional): " month
+	read -p "Note (Optional): " note
+	printf "@$media{$tag,\n\tauthor = \"${author}\",\n"
+	;;
+	esac
+done
+exit 0
+read -p "Type of media (book/article/online/unpublise): " media
+read -p "Title: " title
+
+printf "@$media{$title"

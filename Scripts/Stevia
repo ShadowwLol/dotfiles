@@ -4,9 +4,10 @@ PS3='> '
 musicdir="$HOME/Music/"
 cd $musicdir
 songs=$(find . -type f | sed "s/\.\///")
+songsedited=$(find . -type f | sed "s/\.\///g;s/\ /-/g;s/.mp3//g")
 main() {
 	printf "%s\n" ${app^^} | sed 's/./& /g'
-	select option in $songs
+	select option in $songsedited
 	do
 		echo $option
 		case $option in

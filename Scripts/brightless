@@ -1,5 +1,5 @@
 #!/bin/bash
-gpu="amdgpu_bl1"
+gpu="amdgpu_bl0"
 file="/sys/class/backlight/$gpu/brightness"
 statsresult=$((($(cat $file) * 100) / 255))
 case $1 in

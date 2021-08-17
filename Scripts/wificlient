@@ -1,0 +1,12 @@
+#!/bin/bash
+PS3="> "
+if [ "$EUID" -ne 0 ]; then
+	printf "Please run as root\n"
+	exit 1
+fi
+
+read -p "BSSID: " bssid
+read -p "Channel: " chan
+read -p "Interface: " interface
+printf "Interface: $interface\n"
+airodump-ng -c $chan --bssid $bssid $interface

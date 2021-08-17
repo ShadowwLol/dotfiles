@@ -1,0 +1,25 @@
+#!/bin/bash
+
+case "$2" in
+"enable")
+killall NetworkManager
+killall wpa_supplicant
+sleep 5
+macchanger -r $1
+ifconfig $1 down
+iwconfig $1 mode monitor
+ifconfig $1 up
+printf "[+] Monitor Mode enabled [$1]\n"
+;;
+"disable")
+ifconfig $1 down >> /dev/null 2>&1
+iwconfig $1 mode managed >> /dev/null 2>&1
+ifconfig $1 up /dev/null 2>&1
+macchanger -p $1 >> /dev/null 2>&1
+systemctl restart NetworkManager
+systemctl restart wpa_supplicant
+printf "[-] Monitor mode disabled [$1]\n"
+;;
+*)
+printf "Usage:\nmonitor-mode <interface> <option>\nOptions:\nenable - Enable monitor mode.\ndisable - Disable monitor mode.\n"
+esac

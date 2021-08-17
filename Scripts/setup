@@ -1,25 +1,94 @@
 #!/bin/bash
+# -O OUTPUT WGET
 dotconfig="$HOME/.config/"
+dependencies=( "qutebrowser" "zathura" "zathura-pdf-poppler" "rofi" "steam" "discord" "stremio" "mpv" "mpd" "ncmpcpp" "mupdf" "urxvt" "vim" );
 
-overwrite() {
-	printf "$1 already exists, overwrite? (y,n) \n> " ; read over
-	case $over in
-	"y" | "Y") rm "$2" ; break;;
-	*) ;;
+wallp() {
+	cd ~
+	[ ! -d "$HOME/Documents/" ] && mkdir -p "$HOME/Documents/"
+	cd $HOME/Documents
+	wget -O Wallpaper.png -q https://github.com/ShadowwLol/dotfiles/blob/master/Documents/Wallpaper.png?raw=true
+	feh --bg-fill $HOME/Documents/Wallpaper.png
+	case $? in
+	0) printf "%s\n" "Applying Wallpaper" ;;
+	*) printf "%s\n" "Error: Applying Wallpaper" ;;
+	esac
+	cd ~
+}
+
+qutestart() {
+	[ ! -d "${dotconfig}qutebrowser/" ] && mkdir -p "${dotconfig}qutebrowser/"
+	[ -f "${dotconfig}qutebrowser/config.py" ] && rm "${dotconfig}qutebrowser/config.py"
+	cd "${dotconfig}qutebrowser/"
+	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/.config/qutebrowser/config.py
+	case $? in
+	0) printf "%s\n" "Downloaded config.py for Qutebrowser" ;;
+	*) printf "%s\n" "Error: Downloading config.py for Qutebrowser" ;;
+	esac
+	cd ~
+}
+urxstart() {
+	[ -f "$HOME/.Xresources" ] && rm "$HOME/.Xresources"
+	cd ~
+	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/.Xresources
+	case $? in
+	0) printf "%s\n" "Downloaded .Xresources for Urxvt" ; xrdb .Xresources ;;
+	*) printf "%s\n" "Error: Downloading .Xresources for Urxvt" ;;
 	esac
 }
 
 vimstart() {
-	[ -f "$HOME/.vimrc" ]
+	[ -f "$HOME/.vimrc" ] && rm "$HOME/.vimrc"
+	cd ~
 	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/.vimrc
 	case $? in
-	0) printf "%s\n" "Downloaded .vimrc" ;;
-	*) printf "%s\n" "Error: Downloading .vimrc" ;;
+	0) printf "%s\n" "Downloaded .vimrc for Vim" ;;
+	*) printf "%s\n" "Error: Downloading .vimrc for Vim" ;;
 	esac
 }
 
+bashroot() {
+	[ -f "/root/.bashrc" ] && rm "/root/.bashrc"
+	cd /
+	cd /root/
+	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/root/.bashrc
+	case $? in
+	0) printf "%s\n" "Downloaded root .bashrc" ; source /root/.bashrc ;;
+	*) printf "%s\n" "Error: Downloading root .bashrc" ;;
+	esac
+	cd ~
+}
+
+bashrcstart() {
+	[ -f "$HOME/.bashrc" ] && rm "$HOME/.bashrc"
+	cd $HOME
+	wget -q https://raw.githubusercontent.com/ShadowwLol/dotfiles/master/.bashrc
+	case $? in
+	0) printf "%s\n" "Downloaded .bashrc" ; source .bashrc ;;
+	*) printf "%s\n" "Error: Downloading .bashrc" ;;
+	esac
+}
+
+rootstart() {
+	if [ $EUID != 0 ]; then
+		sudo "$0" "$@"
+	fi
+	for dep in "${dependencies[@]}"; do
+		[ ! -x "$(command -v $dep)" ] && (sudo pacman -Sqyyu $dep --noconfirm )
+	done
+	bashroot
+}
 start() {
+	clear
+	select option in ("Openbox" "I3"); do
+		case "$option" in
+		"Openbox") echo $option
+		;;
+		"I3") echo $option
+	done
 	[ ! -d "$dotconfig" ] && mkdir $dotconfig
-	[ -x "$(command -v vim)" ] && vimstart || sudo pacman -S vim --noconfirm
+	vimstart ; qutestart ; urxstart ; wallp
+	bashrcstart
+	rootstart
 }
 start

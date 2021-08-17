@@ -198,31 +198,26 @@ if [ ! -d "$screenshotdirs" ]; then
 	mkdir -p $screenshotdirs
 fi
 
-
-
-main() {
-	menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
-	[ -z "$menu" ] && exit 1
-	filename=$(printf "" | dmenu -p "Filename:")
-	[ ! -z "$filename" ] && filename="screen_%Y-%m-%d_%H-%M-%S"
-	[[ $filename != *.png ]] || [[ $filename != *.jpg ]] || [[ $filename != *.jpeg ]] && filename="$filename.png"
-	path="$screenshotdirs$filename"
-	case $menu in
-	"Partial")
-	partial
-	;;
-	"Window")
-	window
-	;;
-	"Fullscreen")
-	fullscreen
-	;;
-	*)
-	exit
-	;;
-	esac
-
-}
+menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
+[ -z "$menu" ] && exit 1
+filename=$(printf "" | dmenu -p "Filename:")
+[ -z "$filename" ] && filename="screen_%Y-%m-%d_%H-%M-%S"
+[[ $filename != *.png ]] || [[ $filename != *.jpg ]] || [[ $filename != *.jpeg ]] && filename="$filename.png"
+path="$screenshotdirs$filename"
+case $menu in
+"Partial")
+partial
+;;
+"Window")
+window
+;;
+"Fullscreen")
+fullscreen
+;;
+*)
+exit
+;;
+esac
 
 # Start
 main

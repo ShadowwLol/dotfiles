@@ -1,0 +1,31 @@
+#!/bin/bash
+display() {
+	nmcli -f SSID,BSSID,CHAN,SIGNAL,SECURITY dev wifi
+	printf  "\nR: refresh\nQ: quit\n"
+}
+
+setup() {
+	stty -echo
+	tput smcup
+	printf "\e[?25l"
+	tput clear
+	trap end HUP TERM EXIT INT
+}
+
+end() {
+	tput reset
+	nmcli -f SSID,BSSID,CHAN,SIGNAL,SECURITY dev wifi
+	exit 0
+}
+
+setup
+display
+while true; do
+	read -n 1 char
+	case "$char" in
+	"r" | "R") clear ; display
+	;;
+	"q" | "Q") end
+	;;
+	esac
+done
