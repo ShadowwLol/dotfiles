@@ -40,6 +40,9 @@ bindsym --release $mod+l exec $lock
 # Scripts
 bindsym $win+l exec ~/Scripts/poww
 bindsym Print exec ~/Scripts/screentake
+bindsym $win+b exec ~/Scripts/dmenumount
+bindsym $win+n exec ~/Scripts/dmenuumount
+bindsym $win+m exec ~/Scripts/displayselect
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -144,5 +147,4 @@ exec --no-startup-id feh --bg-fill ~/Documents/Wallpaper.png
 exec --no-startup-id setxkbmap -layout pt
 exec --no-startup-id tint2 -c ~/Documents/tint2/minima.tint2rc
 exec --no-startup-id nm-applet
-exec --no-startup-id flameshot
-exec --no-startup-id sleep 7; exec pulseaudio
+exec --no-startup-id pulseaudio -D
