@@ -1,14 +1,14 @@
 
-rofi.font: InconsolataForPowerline Nerd Font 11
+rofi.font: monospace 11
 
 !-*- Perl extensions -*-
-URxvt.perl-ext-common: default,selection-to-clipboard,pasta,matcher,keyboard-select
+URxvt.perl-ext-common: default,selection-to-clipboard,keyboard-select
 URxvt.keysym.M-u:     perl:url-select:select_next
-URxvt.url-launcher:   /usr/bin/brave
+URxvt.url-launcher:   /usr/bin/firefox
 URxvt.underlineURLs:  True
-URxvt.matcher.button: 1
-URxvt.keysym.M-Escape:perl:keyboard-select:activate
-URxvt.keysym.Control-Shift-V:     perl:pasta:paste
+XTerm*vt100.translations: #override \
+    Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
+    Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
 
 !! URxvt Appearance
 *.font: xft:monospace:style=Regular:size=11
